@@ -29,7 +29,7 @@ lazy val model = ( project in file( "model" ) ).settings( libraryDependencies ++
 
 lazy val rules = ( project in file( "rules" ) )
                                     .dependsOn( model )
-                                    .settings( libraryDependencies ++= kieTest ++ droolsTest ++ scalaTest  )
+                                    .settings( libraryDependencies ++= kieTest ++ droolsTest ++ scalaTest ++ loggingTest )
 
 lazy val service = ( project in file( "service" ) )
                                     .dependsOn( model, rules ) //TODO - make a branch to show dynamic rules from DM7

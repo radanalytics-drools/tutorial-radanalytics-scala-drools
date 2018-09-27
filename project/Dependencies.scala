@@ -9,11 +9,10 @@ object Dependencies {
     val kiegroupVersion = "7.4.1.Final"
     val scalaTestVersion = "3.0.4"
     val scalatraVersion = "2.5.4"
-    
 
-    val slf4j = Seq( "org.slf4j" % "slf4j-api" % slf4jVersion )
+    val logging = Seq( "org.slf4j" % "slf4j-api" % slf4jVersion, "ch.qos.logback" % "logback-classic" % logbackVersion )
 
-    val logback = Seq( "ch.qos.logback" % "logback-classic" % logbackVersion )
+    val loggingTest = Seq( "org.slf4j" % "slf4j-api" % slf4jVersion % "test", "ch.qos.logback" % "logback-classic" % logbackVersion % "test" )
 
     val spark = Seq( "org.apache.spark" %% "spark-core" % sparkVersion % "provided" )
 
@@ -33,9 +32,9 @@ object Dependencies {
                        "org.kie" % "kie-internal" % kiegroupVersion % "test",
                        "org.kie" % "kie-ci" % kiegroupVersion % "test" )
 
-//    val opennlp = Seq( "org.apache.opennlp" % "opennlp-tools" % opennlpVersion )
+    //    val opennlp = Seq( "org.apache.opennlp" % "opennlp-tools" % opennlpVersion )
 
-    
+
     val scalaTest = Seq( "org.scalatest" %% "scalatest" % scalaTestVersion % "test" )
 
     // TODO - fix versions later
@@ -44,5 +43,4 @@ object Dependencies {
                         "ch.qos.logback" % "logback-classic" % "1.2.3",
                         "org.eclipse.jetty" % "jetty-webapp" % "9.2.19.v20160908",
                         "javax.servlet" % "javax.servlet-api" % "3.1.0" )
-
 }
