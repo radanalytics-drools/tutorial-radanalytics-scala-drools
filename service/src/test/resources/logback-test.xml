@@ -9,6 +9,10 @@
         </encoder>
     </appender>
 
+    <logger name="org.kie.api.builder" level="INFO"/>
+    <logger name="org.kie.api.builder" level="WARN"/>
+    <logger name="org.drools" level="INFO"/>
+
     <root level="INFO">
         <appender-ref ref="consoleAppender"/>
     </root>

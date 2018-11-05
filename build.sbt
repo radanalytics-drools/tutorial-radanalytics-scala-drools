@@ -21,6 +21,9 @@ resolvers in ThisBuild ++= Seq( "Sonatype releases" at "https://oss.sonatype.org
                                 "Maven Central" at "https://repo1.maven.org/maven2/",
                                 "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/" )
 
+// don't run tests when building the fat jars
+test in assembly := {}
+
 //@formatter:off
 lazy val root = ( project in file( "." ) ).aggregate( model, rules, service )
 
@@ -33,6 +36,6 @@ lazy val rules = ( project in file( "rules" ) )
 
 lazy val service = ( project in file( "service" ) )
                                     .dependsOn( model, rules ) //TODO - make a branch to show dynamic rules from DM7
-                                    .settings( libraryDependencies ++= spark ++ scalaTest ++ scalatra ++ logging )
+                                    .settings( libraryDependencies ++= spark ++ kie ++ drools ++ scalatra ++ logging  ++ scalaTest )
 
 //@formatter:off

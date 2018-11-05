@@ -1,0 +1,4 @@
+#!/bin/bash
+
+java -jar -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=6308 ./service/target/scala-2.11/service-assembly-0.0.1-SNAPSHOT.jar
+
