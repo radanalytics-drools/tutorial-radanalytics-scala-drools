@@ -6,9 +6,12 @@ object Dependencies {
     val logbackVersion = "1.1.7"
     val sparkVersion = "2.2.0"
     val sparkTestBaseVersion = "2.2.0_0.8.0"
-    val kiegroupVersion = "7.4.1.Final"
+    val kiegroupVersion = "7.13.0.Final"
     val scalaTestVersion = "3.0.4"
     val scalatraVersion = "2.5.4"
+    val radanalyticsJavaLibVersion = "0.0.1-SNAPSHOT"
+
+    val radanalyticsJavaCode = Seq( "io.radanalytics" % "domain-model" % radanalyticsJavaLibVersion )
 
     val logging = Seq( "org.slf4j" % "slf4j-api" % slf4jVersion, "ch.qos.logback" % "logback-classic" % logbackVersion )
 

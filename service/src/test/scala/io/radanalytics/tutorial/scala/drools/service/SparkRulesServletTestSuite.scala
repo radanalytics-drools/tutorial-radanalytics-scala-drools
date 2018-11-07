@@ -5,6 +5,8 @@ import org.scalatra.test.scalatest.ScalatraSuite
 
 class SparkRulesServletTestSuite extends FlatSpecLike with ScalatraSuite {
 
+    System.setProperty( "kie.maven.settings.custom", System.getProperty( "user.dir" ) + "/conf/" + "settings.xml" )
+
     addServlet( classOf[ SparkRulesServlet ], "/*" )
 
     "GET request for /" should "return 200" in {
@@ -17,7 +19,7 @@ class SparkRulesServletTestSuite extends FlatSpecLike with ScalatraSuite {
     }
 
     "POST request for /execute" should "return 201" in {
-
+        System.out.println( "From the test, the settings.xml file is : " + System.getProperty( "kie.maven.settings.custom" ) )
         val input = "[{\"value\": \"Michael\"},{\"value\": \"Michael\"},{\"value\": \"Michael\"}]"
         val expectedOutput = "{\"value\":\"Michael\",\"count\":3}"
 

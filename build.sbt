@@ -19,23 +19,16 @@ resolvers += Classpaths.typesafeReleases
 resolvers in ThisBuild ++= Seq( "Sonatype releases" at "https://oss.sonatype.org/content/repositories/releases",
                                 "Spray IO Repository" at "http://repo.spray.io/",
                                 "Maven Central" at "https://repo1.maven.org/maven2/",
-                                "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/" )
+                                "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/",
+                                "OCP Nexus 3" at "http://nexus3-nexus.192.168.64.73.nip.io/repository/radanalytics-drools/")
 
 // don't run tests when building the fat jars
 test in assembly := {}
 
 //@formatter:off
-lazy val root = ( project in file( "." ) ).aggregate( model, rules, service )
-
-lazy val model = ( project in file( "model" ) ).settings( libraryDependencies ++= scalaTest )
-
-
-lazy val rules = ( project in file( "rules" ) )
-                                    .dependsOn( model )
-                                    .settings( libraryDependencies ++= kieTest ++ droolsTest ++ scalaTest ++ loggingTest )
+lazy val root = ( project in file( "." ) ).aggregate( service )
 
 lazy val service = ( project in file( "service" ) )
-                                    .dependsOn( model, rules ) //TODO - make a branch to show dynamic rules from DM7
-                                    .settings( libraryDependencies ++= spark ++ kie ++ drools ++ scalatra ++ logging  ++ scalaTest )
+                                    .settings( libraryDependencies ++= radanalyticsJavaCode ++ spark ++ kie ++ drools ++ scalatra ++ logging  ++ scalaTest )
 
 //@formatter:off
