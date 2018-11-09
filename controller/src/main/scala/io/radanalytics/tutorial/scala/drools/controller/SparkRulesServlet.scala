@@ -20,11 +20,22 @@ import scala.util.{Failure, Success}
 
 class SparkRulesServlet extends ScalatraServlet with RulesProvider with JacksonJsonSupport {
 
+    protected implicit lazy val jsonFormats : Formats = DefaultFormats.withBigDecimal
+
     val LOG : Logger = LoggerFactory.getLogger( classOf[ ScalatraServlet ] )
     var output : Option[ OutputRules ] = None
     var jobCount : Int = 0
 
-    protected implicit lazy val jsonFormats : Formats = DefaultFormats.withBigDecimal
+    //TODO - @michael - find a way to work around the API to make this a val
+    var container : KieContainer = {
+        val props = {
+            LOG.info( "Using custom settings.xml file : " + System.getProperty( "kie.maven.settings.custom" ) )
+            val props : Properties = new Properties()
+            props.load( Source.fromURL( getClass.getResource( "/startup-rules.properties" ) ).bufferedReader )
+            props
+        }
+        loadDynamicRules( props.getProperty( "startup.rules.group" ), props.getProperty( "startup.rules.artifact" ), props.getProperty( "startup.rules.version" ) )
+    }
 
     //=====================================
     // Scalatra Routes
@@ -86,16 +97,5 @@ class SparkRulesServlet extends ScalatraServlet with RulesProvider with JacksonJ
     //=====================================
     // Support code
     //=====================================
-    //TODO - @michael - find a way to work around the API to make this a val
-    var container : KieContainer = {
-        val props = {
-            LOG.info( "Using custom settings.xml file : " + System.getProperty( "kie.maven.settings.custom" ) )
-            val props : Properties = new Properties()
-            props.load( Source.fromURL( getClass.getResource( "/startup-rules.properties" ) ).bufferedReader )
-            props
-        }
-        loadRules( props )
-    }
-
     def reloadRules( group : String, artifact : String, version : String ) : Unit = this.container = loadDynamicRules( group, artifact, version )
 }
