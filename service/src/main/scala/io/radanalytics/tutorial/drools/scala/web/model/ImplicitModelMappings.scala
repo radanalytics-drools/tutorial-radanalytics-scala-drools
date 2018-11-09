@@ -3,7 +3,7 @@ package io.radanalytics.tutorial.drools.scala.web.model
 import io.radanalytics.tutorial.drools.rule.model.{Input => InputRules, Output => OutputRules}
 import io.radanalytics.tutorial.drools.scala.web.model.{Input => InputWeb, Output => OutputWeb}
 
-object ModelMappings {
+object ImplicitModelMappings {
 
     implicit def webInputToRulesInput( input : InputWeb ) : InputRules = new InputRules( input.value )
 

@@ -19,15 +19,14 @@ class SparkRulesServletTestSuite extends FlatSpecLike with ScalatraSuite {
     }
 
     "POST request for /execute" should "return 201" in {
-        System.out.println( "From the test, the settings.xml file is : " + System.getProperty( "kie.maven.settings.custom" ) )
         val input = "[{\"value\": \"Michael\"},{\"value\": \"Michael\"},{\"value\": \"Michael\"}]"
-        val expectedOutput = "{\"value\":\"Michael\",\"count\":3}"
+        val expectedOutput = "{\"id\":\"0\",\"message\":\"Spark + Drools job was started\"}"
 
         //@formatter:off
         post( "/execute", input.getBytes, Map( "Content-Type" -> "application/json" ) ) {
             status should equal ( 201 )
             Thread.sleep( 1000 )
-//            body should equal ( expectedOutput )
+            body should equal ( expectedOutput )
         }
         //@formatter:on
     }

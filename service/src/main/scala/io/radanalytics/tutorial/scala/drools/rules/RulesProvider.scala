@@ -10,7 +10,6 @@ trait RulesProvider {
 
     def loadRules( props : Properties ) : KieContainer = {
         val rulePkgType : String = props.getProperty( "rule.deployment.type" ).toUpperCase
-        println( "########" + rulePkgType )
         rulePkgType match {
             case "" => loadStaticRules()
             case "STATIC" => loadStaticRules()

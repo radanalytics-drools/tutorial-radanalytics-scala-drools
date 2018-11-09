@@ -4,14 +4,14 @@ package io.radanalytics.tutorial.scala.drools.service
 import java.util.Properties
 
 import io.radanalytics.tutorial.drools.rule.model.{Input => InputRules, Output => OutputRules}
-import io.radanalytics.tutorial.drools.scala.web.model.{Input => InputWeb, Output => OutputWeb}
+import io.radanalytics.tutorial.drools.scala.web.model.{Job, Input => InputWeb, Output => OutputWeb}
 import io.radanalytics.tutorial.scala.drools.rules.RulesProvider
 import org.json4s.{DefaultFormats, Formats}
 import org.kie.api.runtime.{ClassObjectFilter, KieContainer}
 import org.scalatra.json._
 import org.scalatra._
 import org.slf4j.{Logger, LoggerFactory}
-import io.radanalytics.tutorial.drools.scala.web.model.ModelMappings._
+import io.radanalytics.tutorial.drools.scala.web.model.ImplicitModelMappings._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -22,24 +22,12 @@ class SparkRulesServlet extends ScalatraServlet with RulesProvider with JacksonJ
 
     val LOG : Logger = LoggerFactory.getLogger( classOf[ ScalatraServlet ] )
     var output : Option[ OutputRules ] = None
+    var jobCount : Int = 0
 
     protected implicit lazy val jsonFormats : Formats = DefaultFormats.withBigDecimal
 
-    //TODO - @michael - find a way to work around the API to make this a val
-    var container : KieContainer = {
-        val props = {
-            LOG.info( "Using custom settings.xml file : " + System.getProperty( "kie.maven.settings.custom" ) )
-            val props : Properties = new Properties()
-            props.load( Source.fromURL( getClass.getResource( "/startup-rules.properties" ) ).bufferedReader )
-            props
-        }
-        loadRules( props )
-    }
-
-    def reloadRules( group : String, artifact : String, version : String ) : Unit = this.container = loadDynamicRules( group, artifact, version )
-
     //=====================================
-    //  Scalatra Route code starts here
+    // Scalatra Routes
     //=====================================
 
     //@formatter:off
@@ -77,20 +65,37 @@ class SparkRulesServlet extends ScalatraServlet with RulesProvider with JacksonJ
     post( "/execute" )  {
         val input : List[InputRules] = parsedBody.extract[ List[ InputWeb ] ] //~~NOTE~~ - InputWeb is implicitly converted to InputRules
 
-        input.foreach(println)
         val process = Future {
             val session = container.newKieSession( "test-ksession" )
             input.foreach( i => session.insert( i ) )
             session.fireAllRules
             output  = Some( session.getObjects( new ClassObjectFilter( classOf[ OutputRules ] ) ).stream().findFirst().get().asInstanceOf[ OutputRules ] )
+            jobCount += 1
         }
 
         process.onComplete {
-            case Success( value ) => println( s"Success!!! $output" )
+            case Success( value ) => LOG.info( "Success : " + output.get )
             case Failure( e ) => e.printStackTrace
         }
 
-        Created( "Spark rules process was started" )
+        Created( Job( s"$jobCount", "Spark + Drools job was started" ) )
     }
     //@formatter:on
+
+
+    //=====================================
+    // Support code
+    //=====================================
+    //TODO - @michael - find a way to work around the API to make this a val
+    var container : KieContainer = {
+        val props = {
+            LOG.info( "Using custom settings.xml file : " + System.getProperty( "kie.maven.settings.custom" ) )
+            val props : Properties = new Properties()
+            props.load( Source.fromURL( getClass.getResource( "/startup-rules.properties" ) ).bufferedReader )
+            props
+        }
+        loadRules( props )
+    }
+
+    def reloadRules( group : String, artifact : String, version : String ) : Unit = this.container = loadDynamicRules( group, artifact, version )
 }
