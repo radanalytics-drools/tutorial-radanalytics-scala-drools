@@ -1,4 +1,4 @@
-package io.radanalytics.tutorial.scala.drools.service
+package io.radanalytics.tutorial.scala.drools.controller
 
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.webapp.WebAppContext

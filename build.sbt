@@ -26,9 +26,9 @@ resolvers in ThisBuild ++= Seq( "Sonatype releases" at "https://oss.sonatype.org
 test in assembly := {}
 
 //@formatter:off
-lazy val root = ( project in file( "." ) ).aggregate( service )
+lazy val root = ( project in file( "." ) ).aggregate( controller )
 
-lazy val service = ( project in file( "service" ) )
+lazy val controller = ( project in file( "controller" ) )
                                     .settings( libraryDependencies ++= radanalyticsJavaCode ++ spark ++ kie ++ drools ++ scalatra ++ logging  ++ scalaTest )
 
 //@formatter:off

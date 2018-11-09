@@ -1,8 +1,8 @@
 organization := "io.radanalytics.tutorial.scala.drools"
-name := "service"
+name := "controller"
 version := "0.0.1-SNAPSHOT"
 
-mainClass in(Compile, run) := Some( "io.radanalytics.tutorial.scala.drools.service.Main" )
+mainClass in(Compile, run) := Some( "io.radanalytics.tutorial.scala.drools.controller.Main" )
 
 // docs for why this is necessary are here: https://github.com/scalatra/sbt-scalatra
 enablePlugins( JavaAppPackaging )
