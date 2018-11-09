@@ -1,4 +1,4 @@
-package io.radanalytics.tutorial.scala.drools.service
+package io.radanalytics.tutorial.scala.drools.controller
 
 import javax.servlet.ServletContext
 import org.scalatra.LifeCycle
