@@ -13,6 +13,7 @@ import org.scalatra._
 import org.slf4j.{Logger, LoggerFactory}
 import io.radanalytics.tutorial.drools.scala.web.model.ImplicitModelMappings._
 import org.apache.spark.broadcast.Broadcast
+import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 import org.kie.api.KieBase
 
@@ -26,11 +27,8 @@ class SparkRulesServlet extends ScalatraServlet with RulesProvider with JacksonJ
 
     protected implicit lazy val jsonFormats : Formats = DefaultFormats.withBigDecimal
     val LOG : Logger = LoggerFactory.getLogger( classOf[ ScalatraServlet ] )
-    val spark : SparkContext = new SparkContext( new SparkConf().setAppName( "Radanalytics IO SparkPI Scalatra Tutorial" ) )
 
-    val m = Map( 1 -> "one", 2 -> "two" )
-    m.foreach( println )
-    m.map( x => x._1 )
+    val spark : SparkContext = new SparkContext( new SparkConf().setAppName( "Radanalytics IO SparkPI Scalatra Tutorial" ) )
 
     var output : Option[ OutputRules ] = None
     var jobCount : Int = 0
@@ -90,12 +88,16 @@ class SparkRulesServlet extends ScalatraServlet with RulesProvider with JacksonJ
         val kbase : Broadcast[ KieBase ] = spark.broadcast( this.container.getKieBase )
 
         val process = Future {
-//            spark.parallelize( input ).map( i => RulesEvaluator.executeRules(i, classOf[InputRules], kbase.value ) ).filter( i => )
+            val results : Array[ InputRules ] = input.map( i => RulesEvaluator.executeRules( i, classOf[ InputRules ], kbase.value ) )
+                 .reduce( ( x,y ) => x ++ y )
+                 .asInstanceOf[ RDD[ InputRules ] ]
+                 .collect()
+            output = Some( OutputWeb( results.length ) )
         }
 
         process.onComplete {
             case Success( value ) => LOG.info( "Success : " + output.get )
-            case Failure( e ) => e.printStackTrace
+            case Failure( e ) => e.printStackTrace()
         }
 
         Created( Job( s"$jobCount", "Spark + Drools job was started" ) )
