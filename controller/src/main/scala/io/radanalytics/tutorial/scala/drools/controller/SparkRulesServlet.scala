@@ -4,20 +4,19 @@ package io.radanalytics.tutorial.scala.drools.controller
 import java.util.Properties
 
 import io.radanalytics.tutorial.drools.rule.model.{Input => InputRules, Output => OutputRules}
+import io.radanalytics.tutorial.drools.scala.web.model.ImplicitModelMappings._
 import io.radanalytics.tutorial.drools.scala.web.model.{Job, Input => InputWeb, Output => OutputWeb}
 import io.radanalytics.tutorial.scala.drools.rules.{RulesEvaluator, RulesProvider}
-import org.json4s.{DefaultFormats, Formats}
-import org.kie.api.runtime.{ClassObjectFilter, KieContainer}
-import org.scalatra.json._
-import org.scalatra._
-import org.slf4j.{Logger, LoggerFactory}
-import io.radanalytics.tutorial.drools.scala.web.model.ImplicitModelMappings._
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
+import org.json4s.{DefaultFormats, Formats}
 import org.kie.api.KieBase
+import org.kie.api.runtime.KieContainer
+import org.scalatra._
+import org.scalatra.json._
+import org.slf4j.{Logger, LoggerFactory}
 
-import scala.collection.mutable.ListBuffer
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.io.Source
