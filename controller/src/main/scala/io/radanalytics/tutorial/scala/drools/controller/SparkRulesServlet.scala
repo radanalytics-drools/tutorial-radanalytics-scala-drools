@@ -79,8 +79,6 @@ class SparkRulesServlet extends ScalatraServlet with RulesProvider with JacksonJ
     }
 
     post( "/execute" )  {
-        val spark : SparkContext = new SparkContext( new SparkConf().setAppName( "Radanalytics IO SparkPI Scalatra Tutorial" ) )
-
         val requestInput : List[ InputRules ] = parsedBody.extract[ List[ InputWeb ] ] //~~NOTE~~ - InputWeb is implicitly converted to InputRules
         val input = spark.makeRDD[ InputRules ]( requestInput )
 
@@ -90,6 +88,7 @@ class SparkRulesServlet extends ScalatraServlet with RulesProvider with JacksonJ
             val results : Array[ InputRules ] = input.map( i => RulesEvaluator.executeRules( i, classOf[ InputRules ], kbase.value ) )
                  .reduce( ( x,y ) => x ++ y )
                  .asInstanceOf[ RDD[ InputRules ] ]
+                 .filter( _.isValid )
                  .collect()
             output = Some( OutputWeb( results.length ) )
         }
