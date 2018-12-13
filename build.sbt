@@ -20,7 +20,7 @@ resolvers in ThisBuild ++= Seq( "Sonatype releases" at "https://oss.sonatype.org
                                 "Spray IO Repository" at "http://repo.spray.io/",
                                 "Maven Central" at "https://repo1.maven.org/maven2/",
                                 "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/",
-                                "OCP Nexus 3" at "http://nexus3-nexus.192.168.64.77.nip.io/repository/radanalytics-drools/")
+                                "OCP Nexus 3" at "http://nexus3-nexus.192.168.64.79.nip.io/repository/radanalytics-drools/")
 
 // don't run tests when building the fat jars
 test in assembly := {}

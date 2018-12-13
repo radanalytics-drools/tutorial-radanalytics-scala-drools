@@ -26,7 +26,7 @@
                 <repository>
                     <id>ocp-nexus</id>
                     <name>Minishift Nexus Instance</name>
-                    <url>http://nexus3-nexus.192.168.64.74.nip.io/repository/radanalytics-drools/</url>
+                    <url>http://nexus3-nexus.192.168.64.79.nip.io/repository/radanalytics-drools/</url>
                     <layout>default</layout>
                     <releases>
                         <enabled>true</enabled>
