@@ -27,7 +27,7 @@ object Main {
 
         context.setContextPath( "/" )
         context.setResourceBase( "src/main/webapp" )
-        context.setInitParameter( ScalatraListener.LifeCycleKey, "io.radanalytics.tutorial.scala.drools.service.ScalatraInit" ) // scalatra uses some magic defaults I don't like
+        context.setInitParameter( ScalatraListener.LifeCycleKey, "io.radanalytics.tutorial.scala.drools.controller.ScalatraInit" ) // scalatra uses some magic defaults I don't like
         context.addEventListener( new ScalatraListener )
 
         server.setHandler( context )
