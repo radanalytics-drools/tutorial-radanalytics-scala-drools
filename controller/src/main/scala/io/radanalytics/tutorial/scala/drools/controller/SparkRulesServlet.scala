@@ -87,6 +87,8 @@ class SparkRulesServlet extends ScalatraServlet with RulesProvider with JacksonJ
         val process = Future {
             val result = input.map( i => RulesEvaluator.executeRules( i, classOf[ InputRules ], kbase.value ) )
                  .flatMap( identity )
+                 .asInstanceOf[ RDD[ InputRules ] ]
+                 .filter( x => x.isValid )
                  .count
             output = Some( OutputWeb( result ) )
         }
