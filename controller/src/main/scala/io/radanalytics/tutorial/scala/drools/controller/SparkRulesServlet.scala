@@ -80,7 +80,7 @@ class SparkRulesServlet extends ScalatraServlet with RulesProvider with JacksonJ
 
     post( "/execute" )  {
         val requestInput : List[ InputRules ] = parsedBody.extract[ List[ InputWeb ] ] //~~NOTE~~ - InputWeb is implicitly converted to InputRules
-        val input = spark.makeRDD[ InputRules ]( requestInput )
+        val input : RDD[ InputRules ] = spark.parallelize( requestInput )
 
         val kbase : Broadcast[ KieBase ] = spark.broadcast( this.container.getKieBase )
 
@@ -89,7 +89,7 @@ class SparkRulesServlet extends ScalatraServlet with RulesProvider with JacksonJ
                  .reduce( ( x,y ) => x ++ y )
                  .asInstanceOf[ RDD[ InputRules ] ]
                  .filter( _.isValid )
-            output = Some( OutputWeb( results.count() ) )
+            output = Some( OutputWeb( results.count ) )
         }
 
         process.onComplete {
