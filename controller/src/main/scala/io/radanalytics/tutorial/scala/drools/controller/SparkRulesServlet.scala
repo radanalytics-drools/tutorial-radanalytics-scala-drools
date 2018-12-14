@@ -85,10 +85,10 @@ class SparkRulesServlet extends ScalatraServlet with RulesProvider with JacksonJ
         val kbase : Broadcast[ KieBase ] = spark.broadcast( this.container.getKieBase )
 
         val process = Future {
-            input.map( i => RulesEvaluator.executeRules( i, classOf[ InputRules ], kbase.value ) )
+            val result = input.map( i => RulesEvaluator.executeRules( i, classOf[ InputRules ], kbase.value ) )
                  .flatMap( identity )
-                 .foreach( println )
-//            output = Some( OutputWeb( results.count ) )
+                 .count
+            output = Some( OutputWeb( result ) )
         }
 
         process.onComplete {
