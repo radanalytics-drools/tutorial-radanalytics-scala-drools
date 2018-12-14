@@ -85,12 +85,11 @@ class SparkRulesServlet extends ScalatraServlet with RulesProvider with JacksonJ
         val kbase : Broadcast[ KieBase ] = spark.broadcast( this.container.getKieBase )
 
         val process = Future {
-            val results : Array[ InputRules ] = input.map( i => RulesEvaluator.executeRules( i, classOf[ InputRules ], kbase.value ) )
+            val results : RDD[ InputRules ] = input.map( i => RulesEvaluator.executeRules( i, classOf[ InputRules ], kbase.value ) )
                  .reduce( ( x,y ) => x ++ y )
                  .asInstanceOf[ RDD[ InputRules ] ]
                  .filter( _.isValid )
-                 .collect()
-            output = Some( OutputWeb( results.length ) )
+            output = Some( OutputWeb( results.count() ) )
         }
 
         process.onComplete {
